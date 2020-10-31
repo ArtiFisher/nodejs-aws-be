@@ -1,4 +1,4 @@
-import * as products from './productList.json';
+import products from './productList.json';
 
 // eslint-disable-next-line import/prefer-default-export
 export const handler = async event => {
@@ -6,8 +6,10 @@ export const handler = async event => {
     resolve(products.find(product => product.id === event.pathParameters?.productId));
   });
   return {
-    isBase64Encoded: false,
-    headers: {},
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Credentials': true,
+    },
     statusCode: 200,
     body: JSON.stringify(searchResult),
   };
