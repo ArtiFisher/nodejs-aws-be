@@ -1,16 +1,23 @@
-import products from './productList.json';
 import { StatusCodes } from 'http-status-codes';
+import { dbOptions } from '../utils/db-connect.js';
+import { Client } from 'pg';
 
-// eslint-disable-next-line import/prefer-default-export
-export const handler = async () => {
+export const handler = async event => {
   let body;
   let statusCode;
+  const client = new Client(dbOptions);
+  console.log(event);
   try {
-    body = JSON.stringify(products);
+    await client.connect();
+    body = JSON.stringify((await client.query('SELECT * from products')).rows);
     statusCode = StatusCodes.OK
   } catch(e) {
     body = JSON.stringify(e);
+    console.log(e);
     statusCode = StatusCodes.INTERNAL_SERVER_ERROR
+  }
+  finally {
+    client.end();
   }
   return {
     headers: {

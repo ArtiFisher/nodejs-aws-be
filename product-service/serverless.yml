@@ -7,6 +7,7 @@ frameworkVersion: '2'
 
 # Add the serverless-webpack plugin
 plugins:
+  - serverless-dotenv-plugin
   - serverless-webpack
 
 provider:
@@ -18,14 +19,14 @@ provider:
 
 functions:
   getProductsList:
-    handler: getProductsList.handler
+    handler: handlers/getProductsList.handler
     events:
       - http:
           method: get
           path: products
           cors: true
   getProductsById:
-    handler: getProductsById.handler
+    handler: handlers/getProductsById.handler
     events:
       - http:
           method: get
