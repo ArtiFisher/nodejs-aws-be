@@ -9,7 +9,9 @@ export const handler = async event => {
   console.log(event);
   try {
     await client.connect();
-    body = JSON.stringify((await client.query('SELECT * from products')).rows);
+    body = JSON.stringify((await client.query(
+        'SELECT id, title, image, description, price, count from products INNER JOIN stocks ON products.id = stocks.product_id')
+      ).rows);
     statusCode = StatusCodes.OK
   } catch(e) {
     body = JSON.stringify(e);

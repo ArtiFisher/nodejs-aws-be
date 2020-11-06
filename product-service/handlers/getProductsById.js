@@ -9,7 +9,10 @@ export const handler = async event => {
   console.log(event);
   try {
     await client.connect();
-    const searchResult = (await client.query('SELECT * from products WHERE id = $1', [event.pathParameters?.productId]))
+    const searchResult = (await client.query(
+      'SELECT id, title, image, description, price, count from products INNER JOIN stocks ON products.id = stocks.product_id WHERE id = $1',
+      [event.pathParameters?.productId])
+    )
     if (searchResult.rowCount > 0) {
       statusCode = StatusCodes.OK;
       body = JSON.stringify(searchResult.rows);
