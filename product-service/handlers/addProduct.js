@@ -11,7 +11,7 @@ export const handler = async event => {
   console.log(event);
   try {
     const { title, image = defaultImage, description = "", price = 9.99, count = 0 } = JSON.parse(event.body);
-    if (!title || !Number.isInteger(count)) {
+    if (!title || !Number.isInteger(Number(count))) {
       statusCode = StatusCodes.BAD_REQUEST;
       body = JSON.stringify({ message: 'Product data is invalid' });
     }
