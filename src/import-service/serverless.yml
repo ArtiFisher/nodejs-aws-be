@@ -16,11 +16,11 @@ provider:
   apiGateway:
     shouldStartNameWithService: true
   iamRoleStatements:
-    - Effect: "Allow":
-        Action:
-          - "s3:*"
-        Resource:
-          - "arn:aws:s3:::imported-products/*"
+    -  Effect: "Allow"
+       Action:
+         - "s3:*"
+       Resource:
+        - "arn:aws:s3:::imported-products/*"
 
 functions:
   importProductsFile:
