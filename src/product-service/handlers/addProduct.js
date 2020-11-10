@@ -1,6 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import { dbOptions } from '../utils/db-connect.js';
 import { Client } from 'pg';
+import { headers } from '../utils/const.js'
 
 const defaultImage = "https://cdn.mos.cms.futurecdn.net/MMwRCjVEaoJPP4dBBugWFY-1200-80.jpg";
 
@@ -39,10 +40,7 @@ export const handler = async event => {
     client.end();
   }
   return {
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Credentials': true,
-    },
+    headers,
     body,
     statusCode,
   };
