@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
-import { dbOptions } from '../utils/db-connect.js';
 import { Client } from 'pg';
-import { headers } from '../utils/const.js'
+import { dbOptions } from '../../utils/db-connect.js';
+import { headers } from '../../utils/const.js'
 
 export const handler = async event => {
   let body;
