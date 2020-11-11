@@ -10,7 +10,7 @@ export const handler = async event => {
   console.log(event);
   try {
     const params = {
-      Key: `uploaded/${event.pathParameters?.name}`,
+      Key: `uploaded/${event.queryStringParameters?.name}`,
       Bucket: 'imported-products',
       Expires: 60,
       ContentType: 'text/csv'
