@@ -29,3 +29,12 @@ functions:
       - http:
           method: get
           path: import
+  parseImportedFile:
+    handler: handlers/importFileParser.handler
+    events:
+      - s3:
+          bucket: imported-products
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: uploaded/
+          existing: true

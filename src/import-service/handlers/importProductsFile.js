@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes';
 import AWS from 'aws-sdk';
-import { headers } from '../../utils/const.js';
+import { headers, csvBucket } from '../../utils/const.js';
 
 const S3 = new AWS.S3({ apiVersion: '2006-03-01', region: 'us-east-1' });
 
@@ -11,7 +11,7 @@ export const handler = async event => {
   try {
     const params = {
       Key: `uploaded/${event.queryStringParameters?.name}`,
-      Bucket: 'imported-products',
+      Bucket: csvBucket,
       Expires: 60,
       ContentType: 'text/csv'
     }
