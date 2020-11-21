@@ -11,11 +11,7 @@ const sendCSVRow = row =>{
   sqs.sendMessage({
     QueueUrl: process.env.SQS_QUEUE_URL,
     MessageBody: sentRow
-  }, (err, response) => {
-    console.log(sentRow)
-    err && console.dir(err)
-    console.dir(response)
-  })
+  }, console.log)
 }
 
 export const handler = async event => {
@@ -44,11 +40,10 @@ export const handler = async event => {
           resolve();
         })
     })
-    console.dir(event)
     body = JSON.stringify(event);
     statusCode = StatusCodes.OK;
   } catch(e) {
-    console.dir(e)
+    console.log(e)
     body = JSON.stringify(e);
     statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
   }
