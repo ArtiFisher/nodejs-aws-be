@@ -3,28 +3,37 @@ import AWS from 'aws-sdk';
 import { headers, csvBucket } from '../../utils/const.js';
 import csv from 'csv-parser';
 
-const S3 = new AWS.S3({ apiVersion: '2006-03-01', region: 'us-east-1' });
+const s3 = new AWS.S3({ apiVersion: '2006-03-01', region: 'eu-west-1' });
+const sqs = new AWS.SQS({ apiVersion: '2012-11-05', region: 'eu-west-1' });
+
+const sendCSVRow = row =>{
+  const sentRow = JSON.stringify(row);
+  sqs.sendMessage({
+    QueueUrl: process.env.SQS_QUEUE_URL,
+    MessageBody: sentRow
+  }, console.log)
+}
 
 export const handler = async event => {
   let body;
   let statusCode;
   try {
     const record = event.Records[0];
-    await new Promise((resolve, reject) => {
-      S3.getObject({
+    await new Promise(resolve => {
+      s3.getObject({
         Bucket: csvBucket,
         Key: record.s3.object.key
       })
         .createReadStream()
         .pipe(csv())
-        .on('data', console.dir)
+        .on('data', sendCSVRow)
         .on('end', async () => {
-          await S3.copyObject({
+          await s3.copyObject({
             Bucket: csvBucket,
             CopySource: `${csvBucket}/${record.s3.object.key}`,
             Key: record.s3.object.key.replace('uploaded', 'parsed')
           }).promise();
-          await S3.deleteObject({
+          await s3.deleteObject({
             Bucket: csvBucket,
             Key: record.s3.object.key
           }).promise();
@@ -34,7 +43,8 @@ export const handler = async event => {
     body = JSON.stringify(event);
     statusCode = StatusCodes.OK;
   } catch(e) {
-    body = JSON.stringify(event);
+    console.log(e)
+    body = JSON.stringify(e);
     statusCode = StatusCodes.INTERNAL_SERVER_ERROR;
   }
   return {
