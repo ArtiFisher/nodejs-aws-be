@@ -34,6 +34,12 @@ module.exports = {
           http: {
             method: 'get',
             path: 'import',
+            authorizer: {
+              name: 'BasicAuthorizer',
+              arn: "${cf:authorization-service-${self:provider.stage}.BasicAuthorizerLambdaFunctionQualifiedArn}",
+              identitySource: "method.request.header.Authorization",
+              resultTtlInSeconds: 0,
+            },
           }
         }
       ]

@@ -16,5 +16,13 @@ module.exports = {
       handler: 'handlers/basicAuthorizer.handler'
     },
   },
-  resources: {},
+  resources: {
+    Outputs: {
+      BasicAuthorizer: {
+        Value: {
+          'Fn::GetAtt': [ 'basicAuthorizer', 'Arn' ]
+        }
+      }
+    },
+  },
 };

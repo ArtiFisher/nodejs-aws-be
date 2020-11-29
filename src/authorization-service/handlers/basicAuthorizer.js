@@ -12,11 +12,12 @@ const generatePolicy = (principalId, resource, isAccessAllowed) => ({
   }
 });
 
-export const handler = async event => {
+export const handler = (event, ctx, callback) => {
   try {
+    console.log(event)
     if (event['type'] != 'TOKEN'){
       console.log(event)
-      return `Unauthorized. ${JSON.stringify(event)}`;
+      callback(`Unauthorized. Wrong type. ${JSON.stringify(event)}`);
     }
     const encodedCreds = event.authorizationToken.split(' ')[1];
     const [username, password] = Buffer.from(encodedCreds, 'base64').toString('utf-8').split(':');
@@ -25,9 +26,9 @@ export const handler = async event => {
 
     const storedUserPassword = process.env[username];
     const isAccessAllowed = storedUserPassword && storedUserPassword === password;
-    return generatePolicy(encodedCreds, event.methodArn, isAccessAllowed);
+    callback(null, generatePolicy(encodedCreds, event.methodArn, isAccessAllowed));
   } catch(e) {
     console.log(e)
-    return `Unauthorized. ${JSON.stringify(e)}`;
+    callback(`Unauthorized. Error. ${JSON.stringify(e)}`);
   }
 };
