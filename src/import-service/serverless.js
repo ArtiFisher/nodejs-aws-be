@@ -64,6 +64,10 @@ module.exports = {
           Type: "AWS::ApiGateway::GatewayResponse",
           Properties: {
               ResponseType: "ACCESS_DENIED",
+              ResponseParameters: {
+                  'gatewayresponse.header.Access-Control-Allow-Origin': "'*'",
+                  'gatewayresponse.header.Access-Control-Allow-Headers': "'*'"
+              },
               ResponseTemplates: {
                 "application/json": "You are not welcome here"
               },
@@ -77,6 +81,10 @@ module.exports = {
           Type: "AWS::ApiGateway::GatewayResponse",
           Properties: {
               ResponseType: "UNAUTHORIZED",
+              ResponseParameters: {
+                  'gatewayresponse.header.Access-Control-Allow-Origin': "'*'",
+                  'gatewayresponse.header.Access-Control-Allow-Headers': "'*'"
+              },
               ResponseTemplates: {
                 "application/json": "Who are you?"
               },
