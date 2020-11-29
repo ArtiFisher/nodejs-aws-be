@@ -83,7 +83,7 @@ module.exports = {
                   'gatewayresponse.header.Access-Control-Allow-Headers': "'*'"
               },
               ResponseTemplates: {
-                "application/json": `{ "message": "You are not welcome here" }`
+                "application/json": `{ "message": "You shall not pass!" }`
               },
               RestApiId: {
                   Ref: 'ApiGatewayRestApi',
