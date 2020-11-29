@@ -58,4 +58,34 @@ module.exports = {
       }]
     },
   },
+  resources: {
+    Resources: {
+      AccessDeniedResponse: {
+          Type: "AWS::ApiGateway::GatewayResponse",
+          Properties: {
+              ResponseType: "ACCESS_DENIED",
+              ResponseTemplates: {
+                "application/json": "You are not welcome here"
+              },
+              RestApiId: {
+                  Ref: 'ApiGatewayRestApi',
+              },
+              StatusCode: "403"
+          }
+      },
+      UnauthorizedResponse: {
+          Type: "AWS::ApiGateway::GatewayResponse",
+          Properties: {
+              ResponseType: "UNAUTHORIZED",
+              ResponseTemplates: {
+                "application/json": "Who are you?"
+              },
+              RestApiId: {
+                Ref: 'ApiGatewayRestApi',
+              },
+              StatusCode: "401"
+          }
+      }
+    },
+  },
 };
