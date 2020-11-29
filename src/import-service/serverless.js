@@ -34,6 +34,7 @@ module.exports = {
           http: {
             method: 'get',
             path: 'import',
+            cors: true,
             authorizer: {
               name: 'BasicAuthorizer',
               arn: "${cf:authorization-service-${self:provider.stage}.BasicAuthorizerLambdaFunctionQualifiedArn}",
@@ -60,6 +61,19 @@ module.exports = {
   },
   resources: {
     Resources: {
+      DefaultErrorResponse: {
+        Type: 'AWS::ApiGateway::GatewayResponse',
+        Properties: {
+          ResponseParameters: {
+            'gatewayresponse.header.Access-Control-Allow-Origin': "'*'",
+            'gatewayresponse.header.Access-Control-Allow-Headers': "'*'",
+          },
+          ResponseType: 'DEFAULT_4XX',
+          RestApiId: {
+            Ref: 'ApiGatewayRestApi',
+          },
+        },
+      },
       AccessDeniedResponse: {
           Type: "AWS::ApiGateway::GatewayResponse",
           Properties: {
@@ -69,7 +83,7 @@ module.exports = {
                   'gatewayresponse.header.Access-Control-Allow-Headers': "'*'"
               },
               ResponseTemplates: {
-                "application/json": "You are not welcome here"
+                "application/json": `{ "message": "You are not welcome here" }`
               },
               RestApiId: {
                   Ref: 'ApiGatewayRestApi',
@@ -86,7 +100,7 @@ module.exports = {
                   'gatewayresponse.header.Access-Control-Allow-Headers': "'*'"
               },
               ResponseTemplates: {
-                "application/json": "Who are you?"
+                "application/json": `{ "message": "Who are you?" }`
               },
               RestApiId: {
                 Ref: 'ApiGatewayRestApi',
