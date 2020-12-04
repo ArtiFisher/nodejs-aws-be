@@ -34,6 +34,13 @@ module.exports = {
           http: {
             method: 'get',
             path: 'import',
+            cors: true,
+            authorizer: {
+              name: 'BasicAuthorizer',
+              arn: "${cf:authorization-service-${self:provider.stage}.BasicAuthorizerLambdaFunctionQualifiedArn}",
+              identitySource: "method.request.header.Authorization",
+              resultTtlInSeconds: 0,
+            },
           }
         }
       ]
@@ -50,6 +57,57 @@ module.exports = {
           existing: true,
         }
       }]
+    },
+  },
+  resources: {
+    Resources: {
+      DefaultErrorResponse: {
+        Type: 'AWS::ApiGateway::GatewayResponse',
+        Properties: {
+          ResponseParameters: {
+            'gatewayresponse.header.Access-Control-Allow-Origin': "'*'",
+            'gatewayresponse.header.Access-Control-Allow-Headers': "'*'",
+          },
+          ResponseType: 'DEFAULT_4XX',
+          RestApiId: {
+            Ref: 'ApiGatewayRestApi',
+          },
+        },
+      },
+      AccessDeniedResponse: {
+          Type: "AWS::ApiGateway::GatewayResponse",
+          Properties: {
+              ResponseType: "ACCESS_DENIED",
+              ResponseParameters: {
+                  'gatewayresponse.header.Access-Control-Allow-Origin': "'*'",
+                  'gatewayresponse.header.Access-Control-Allow-Headers': "'*'"
+              },
+              ResponseTemplates: {
+                "application/json": `{ "message": "You shall not pass!" }`
+              },
+              RestApiId: {
+                  Ref: 'ApiGatewayRestApi',
+              },
+              StatusCode: "403"
+          }
+      },
+      UnauthorizedResponse: {
+          Type: "AWS::ApiGateway::GatewayResponse",
+          Properties: {
+              ResponseType: "UNAUTHORIZED",
+              ResponseParameters: {
+                  'gatewayresponse.header.Access-Control-Allow-Origin': "'*'",
+                  'gatewayresponse.header.Access-Control-Allow-Headers': "'*'"
+              },
+              ResponseTemplates: {
+                "application/json": `{ "message": "Who are you?" }`
+              },
+              RestApiId: {
+                Ref: 'ApiGatewayRestApi',
+              },
+              StatusCode: "401"
+          }
+      }
     },
   },
 };
