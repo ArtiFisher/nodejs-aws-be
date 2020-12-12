@@ -13,12 +13,12 @@ app.all('/*', (req, res) => {
     const apiURL = originalUrl.slice(recipient.length + 1);
 
     const recipientURL = process.env[recipient];
-
+    
     if(recipientURL) {
         axios({
             method,
             url: `${recipientURL}${apiURL}`,
-            ...(body && ({ data: body })),
+            ...(Object.keys(req.body || {}).length > 0 && {data: req.body}),
         })
         .then(({ data }) => {
             res.json(data);
